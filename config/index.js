@@ -1,12 +1,21 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
+
+// main project config
+
 var path = require('path')
+
+/**
+ * __dirname : 在任何模块文件内部，__dirname变量获取当前模块文件所在目录的完整绝对路径
+ */
 
 module.exports = {
 	build: {
 		env: require('./prod.env'),
 		index: path.resolve(__dirname, '../dist/index.html'),
 		assetsRoot: path.resolve(__dirname, '../dist'),
-		assetsSubDirectory: 'static',
+		// 编译输出的二级目录
+		assetsSubDirectory: 'static222',
+		// 编译发布上线路径的根目录，可配置为资源服务器域名或 CDN 域名
 		assetsPublicPath: '../',
 		productionSourceMap: true,
 		// Gzip off by default as many popular static hosts such as
@@ -27,6 +36,7 @@ module.exports = {
 		autoOpenBrowser: true,
 		assetsSubDirectory: 'static',
 		assetsPublicPath: '/',
+		// 需要 proxyTable 代理的接口（可跨域）
 		proxyTable: {
 
 		},

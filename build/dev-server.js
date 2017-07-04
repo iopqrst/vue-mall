@@ -1,10 +1,18 @@
+/**
+ * 构建本地服务 
+ */
 require('./check-versions')()
 
+//获取 config/index.js 的默认配置
 var config = require('../config')
+
+// 如果 Node 的环境无法判断当前是 dev / product 环境
+// 使用 config.dev.env.NODE_ENV 作为当前的环境
 if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
 }
 
+// 一个可以强制打开浏览器并跳转至指定url的插件
 var opn = require('opn')
 var path = require('path')
 var express = require('express')
@@ -20,9 +28,11 @@ var autoOpenBrowser = !!config.dev.autoOpenBrowser
 // https://github.com/chimurai/http-proxy-middleware
 var proxyTable = config.dev.proxyTable
 
+// run a server
 var app = express()
 var compiler = webpack(webpackConfig)
 
+// 启动 webpack-dev-middleware，将 编译后的文件暂存到内存中
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
   publicPath: webpackConfig.output.publicPath,
   quiet: true
@@ -40,6 +50,7 @@ compiler.plugin('compilation', function (compilation) {
 })
 
 // proxy api requests
+// 将proxyTable中的请求配置挂载在启动的express服务上
 Object.keys(proxyTable).forEach(function (context) {
   var options = proxyTable[context]
   if (typeof options === 'string') {
@@ -49,9 +60,11 @@ Object.keys(proxyTable).forEach(function (context) {
 })
 
 // handle fallback for HTML5 history API
+// 使用 connect-history-api-fallback 匹配资源，如果不匹配就可以重定向到指定地址
 app.use(require('connect-history-api-fallback')())
 
 // serve webpack bundle output
+// 将内存中的webpack 编译后的文件挂载到express服务上
 app.use(devMiddleware)
 
 // enable hot-reload and state-preserving
